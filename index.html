@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="M_hFsDl8be9YEqiAi3qhuugW9aIeUFdovb-Sir6ZClE" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Clash Royale France — Leaderboard & War Tracker</title>
+    <title>Clash Royale France — Leaderboard & Sync Drive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -31,6 +31,8 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Identity Services Library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
             background-color: #f1f5f9;
@@ -70,21 +72,16 @@
                         </h1>
                         <p class="text-[10px] sm:text-xs font-medium text-slate-500 flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            Sauvegarde auto active & Sync API
+                            Sauvegarde auto & Sync Drive
                         </p>
                     </div>
                 </div>
             </div>
 
             <div class="flex items-center justify-end w-full sm:w-auto gap-2 overflow-x-auto pb-1 sm:pb-0">
-                <button onclick="openSettingsModal()" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold transition border border-slate-200 text-slate-700 shrink-0" title="Configuration API">
+                <button onclick="openSettingsModal()" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold transition border border-slate-200 text-slate-700 shrink-0">
                     <i data-lucide="key" class="w-4 h-4 text-amber-600"></i>
-                    <span class="hidden md:inline">Paramètres</span>
-                </button>
-
-                <button onclick="openGuideModal()" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold transition border border-slate-200 text-crblue shrink-0">
-                    <i data-lucide="help-circle" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline">Guide</span>
+                    <span class="hidden md:inline">Paramètres & Client ID</span>
                 </button>
 
                 <button id="adminToggleBtn" onclick="toggleAdminMode()" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold transition border border-slate-200 text-slate-700 shrink-0">
@@ -92,20 +89,37 @@
                     <span id="adminToggleText">Admin : OFF</span>
                 </button>
 
+                <!-- Dropdown Import / Export / Google Drive -->
                 <div class="relative group shrink-0">
                     <button class="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold transition border border-slate-200 text-slate-700">
                         <i data-lucide="database" class="w-4 h-4 text-emerald-600"></i>
-                        <span class="hidden md:inline">Sauvegarde</span>
+                        <span>Sauvegarde / Sync</span>
                     </button>
-                    <div class="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-2xl shadow-xl p-1.5 hidden group-hover:block z-50">
+                    <div class="absolute right-0 mt-2 w-60 bg-white border border-slate-200 rounded-2xl shadow-xl p-1.5 hidden group-hover:block z-50">
+                        <div class="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase border-b border-slate-100 mb-1">
+                            Fichiers locaux
+                        </div>
                         <button onclick="exportClansJSON()" class="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-xl hover:bg-slate-100 text-xs text-slate-700 font-medium transition">
                             <i data-lucide="download" class="w-4 h-4 text-amber-600"></i>
-                            <span>Télécharger JSON</span>
+                            <span>Exporter en JSON</span>
                         </button>
                         <button onclick="triggerImportJSON()" class="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-xl hover:bg-slate-100 text-xs text-slate-700 font-medium transition">
                             <i data-lucide="upload" class="w-4 h-4 text-crblue"></i>
-                            <span>Restaurer JSON</span>
+                            <span>Importer un fichier JSON</span>
                         </button>
+
+                        <div class="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase border-b border-slate-100 my-1">
+                            Cloud Google Drive
+                        </div>
+                        <button onclick="syncWithGoogleDrive('save')" class="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-xl hover:bg-slate-100 text-xs text-slate-700 font-medium transition">
+                            <i data-lucide="cloud-upload" class="w-4 h-4 text-blue-500"></i>
+                            <span>Sauvegarder vers Drive</span>
+                        </button>
+                        <button onclick="syncWithGoogleDrive('load')" class="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-xl hover:bg-slate-100 text-xs text-slate-700 font-medium transition">
+                            <i data-lucide="cloud-download" class="w-4 h-4 text-emerald-500"></i>
+                            <span>Charger depuis Drive</span>
+                        </button>
+
                         <input type="file" id="importFile" accept=".json" onchange="importClansJSON(event)" class="hidden">
                     </div>
                 </div>
@@ -189,7 +203,7 @@
     </main>
 
     <footer class="mt-auto border-t border-slate-200 bg-white py-6 text-center text-xs font-medium text-slate-500 px-4">
-        <p>Clash Royale France Dashboard — Sauvegarde automatique instantanée.</p>
+        <p>Clash Royale France Dashboard — Enregistrement local & Synchronisation Cloud Google Drive.</p>
     </footer>
 
     <!-- MODAL AJOUT / EDITION CLAN -->
@@ -274,12 +288,12 @@
         </div>
     </div>
 
-    <!-- MODAL SETTINGS -->
+    <!-- MODAL PARAMETRES & GOOGLE DRIVE API -->
     <div id="settingsModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="bg-white border border-slate-200 rounded-3xl w-full max-w-lg p-6 space-y-5 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
-                    <i data-lucide="key" class="w-5 h-5 text-amber-600"></i> Configuration API
+                    <i data-lucide="key" class="w-5 h-5 text-amber-600"></i> API & Client ID Google Drive
                 </h3>
                 <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -287,31 +301,17 @@
             </div>
             <div class="space-y-4 text-sm text-slate-600">
                 <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Client ID Google Drive API (OAuth 2.0)</label>
+                    <input type="text" id="inputDriveClientId" placeholder="xxxxxxxx.apps.googleusercontent.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-mono text-slate-900">
+                    <p class="text-[10px] text-slate-400 mt-1">Nécessaire pour autoriser la synchronisation directement sur votre Google Drive.</p>
+                </div>
+                <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Clé API Officielle Clash Royale</label>
-                    <input type="password" id="inputApiKey" placeholder="Entrez votre clé API..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-mono">
+                    <input type="password" id="inputApiKey" placeholder="Entrez votre clé API Royale..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-mono text-slate-900">
                 </div>
             </div>
             <div class="flex justify-end pt-3 border-t border-slate-100">
                 <button onclick="saveSettings()" class="px-5 py-2.5 rounded-xl bg-crblue text-white text-xs font-bold">Enregistrer</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL GUIDE -->
-    <div id="guideModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white border border-slate-200 rounded-3xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 class="text-lg font-black text-crblue">Guide d'utilisation</h3>
-                <button onclick="closeGuideModal()" class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div class="text-xs text-slate-600 space-y-3">
-                <p><strong>Ajouter un clan :</strong> Cliquez sur "Ajouter Clan" pour enregistrer les informations relatives à votre clan.</p>
-                <p><strong>Mode Admin :</strong> Activez le mode Admin pour débloquer l'édition et la suppression directe de clans enregistrés.</p>
-            </div>
-            <div class="flex justify-end pt-3 border-t border-slate-100">
-                <button onclick="closeGuideModal()" class="px-5 py-2.5 rounded-xl bg-crblue text-white text-xs font-bold">Fermer</button>
             </div>
         </div>
     </div>
@@ -356,6 +356,10 @@
         let isAdminMode = false;
         let selectedBadgeBase64 = null;
         let royaleApiKey = '';
+        let googleClientId = '';
+        let tokenClient = null;
+        let driveAccessToken = null;
+        let pendingDriveAction = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             loadClansFromStorage();
@@ -397,13 +401,17 @@
         function loadSettings() {
             try {
                 royaleApiKey = localStorage.getItem('cr_royale_api_key') || '';
+                googleClientId = localStorage.getItem('cr_google_client_id') || '';
                 document.getElementById('inputApiKey').value = royaleApiKey;
+                document.getElementById('inputDriveClientId').value = googleClientId;
             } catch (err) {}
         }
 
         function saveSettings() {
             royaleApiKey = document.getElementById('inputApiKey').value.trim();
+            googleClientId = document.getElementById('inputDriveClientId').value.trim();
             localStorage.setItem('cr_royale_api_key', royaleApiKey);
+            localStorage.setItem('cr_google_client_id', googleClientId);
             closeSettingsModal();
             showToast('Paramètres enregistrés !', 'check-circle');
         }
@@ -448,7 +456,7 @@
                 return 0;
             });
 
-            // Counters
+            // Refresh stats counters
             document.getElementById('statTotalClans').textContent = clansData.length;
             const topTrophy = clansData.reduce((max, c) => Math.max(max, c.trophies || 0), 0);
             document.getElementById('statTopTrophies').textContent = topTrophy.toLocaleString('fr-FR');
@@ -585,7 +593,7 @@
                 const index = clansData.findIndex(c => c.id === editId);
                 if (index !== -1) {
                     clansData[index] = { ...clansData[index], tag, name, trophies, players, warTrophies, orientation, leader, coLeaders, discord, badgeUrl };
-                    showToast('Clan mis à jour avec succès', 'check-circle');
+                    showToast('Clan mis à jour !', 'check-circle');
                 }
             } else {
                 const newClan = {
@@ -593,7 +601,7 @@
                     tag, name, trophies, players, warTrophies, orientation, leader, coLeaders, discord, badgeUrl
                 };
                 clansData.push(newClan);
-                showToast('Nouveau clan ajouté !', 'plus-circle');
+                showToast('Nouveau clan enregistré !', 'plus-circle');
             }
 
             saveClansToStorage();
@@ -610,14 +618,16 @@
             }
         }
 
+        // EXPORT & IMPORT LOCAL (JSON)
         function exportClansJSON() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(clansData, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `clash_royale_clans_${Date.now()}.json`);
+            downloadAnchor.setAttribute("download", `cr_clans_backup_${Date.now()}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
+            showToast('Export JSON téléchargé !', 'download');
         }
 
         function triggerImportJSON() {
@@ -635,13 +645,135 @@
                         clansData = imported;
                         saveClansToStorage();
                         renderClans();
-                        showToast('Données restaurées !', 'upload');
+                        showToast('Données importées avec succès !', 'upload');
+                    } else {
+                        alert('Format JSON non valide.');
                     }
                 } catch (err) {
-                    alert('Fichier JSON invalide.');
+                    alert('Fichier JSON illisible.');
                 }
             };
             reader.readAsText(file);
+        }
+
+        // SYNCHRONISATION GOOGLE DRIVE API
+        function syncWithGoogleDrive(action) {
+            if (!googleClientId) {
+                openSettingsModal();
+                showToast('Veuillez renseigner votre Client ID Google Drive.', 'key');
+                return;
+            }
+
+            pendingDriveAction = action;
+
+            if (!driveAccessToken) {
+                initGoogleTokenClient();
+                tokenClient.requestAccessToken();
+            } else {
+                executeDriveAction();
+            }
+        }
+
+        function initGoogleTokenClient() {
+            if (tokenClient) return;
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: googleClientId,
+                scope: 'https://www.googleapis.com/auth/drive.file',
+                callback: (response) => {
+                    if (response.error) {
+                        showToast('Erreur d\'authentification Google', 'alert-circle');
+                        return;
+                    }
+                    driveAccessToken = response.access_token;
+                    executeDriveAction();
+                },
+            });
+        }
+
+        async function executeDriveAction() {
+            if (pendingDriveAction === 'save') {
+                await saveToDrive();
+            } else if (pendingDriveAction === 'load') {
+                await loadFromDrive();
+            }
+            pendingDriveAction = null;
+        }
+
+        async function saveToDrive() {
+            showToast('Sauvegarde sur Drive en cours...', 'refresh-cw');
+            const fileName = 'cr_france_clans_backup.json';
+            const fileData = JSON.stringify(clansData, null, 2);
+
+            try {
+                // Recherche si le fichier existe déjà
+                const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${fileName}' and trashed=false`, {
+                    headers: { Authorization: `Bearer ${driveAccessToken}` }
+                });
+                const searchJson = await searchRes.json();
+                
+                let fileId = searchJson.files && searchJson.files.length > 0 ? searchJson.files[0].id : null;
+
+                if (fileId) {
+                    // Mettre à jour le fichier existant
+                    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
+                        method: 'PATCH',
+                        headers: {
+                            Authorization: `Bearer ${driveAccessToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: fileData
+                    });
+                } else {
+                    // Créer un nouveau fichier
+                    const metadata = { name: fileName, mimeType: 'application/json' };
+                    const form = new FormData();
+                    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                    form.append('file', new Blob([fileData], { type: 'application/json' }));
+
+                    await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${driveAccessToken}` },
+                        body: form
+                    });
+                }
+                showToast('Sauvegardé sur Google Drive !', 'cloud-upload');
+            } catch (err) {
+                console.error(err);
+                showToast('Échec de la sauvegarde Drive', 'alert-circle');
+            }
+        }
+
+        async function loadFromDrive() {
+            showToast('Recherche de la sauvegarde sur Drive...', 'refresh-cw');
+            const fileName = 'cr_france_clans_backup.json';
+
+            try {
+                const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${fileName}' and trashed=false`, {
+                    headers: { Authorization: `Bearer ${driveAccessToken}` }
+                });
+                const searchJson = await searchRes.json();
+
+                if (!searchJson.files || searchJson.files.length === 0) {
+                    showToast('Aucune sauvegarde trouvée sur Drive.', 'alert-circle');
+                    return;
+                }
+
+                const fileId = searchJson.files[0].id;
+                const fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+                    headers: { Authorization: `Bearer ${driveAccessToken}` }
+                });
+                const downloadedData = await fileRes.json();
+
+                if (Array.isArray(downloadedData)) {
+                    clansData = downloadedData;
+                    saveClansToStorage();
+                    renderClans();
+                    showToast('Données restaurées depuis Google Drive !', 'cloud-download');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Échec de la récupération depuis Drive', 'alert-circle');
+            }
         }
 
         function openSettingsModal() {
@@ -651,14 +783,6 @@
         function closeSettingsModal() {
             document.getElementById('settingsModal').classList.add('hidden');
             document.getElementById('settingsModal').classList.remove('flex');
-        }
-        function openGuideModal() {
-            document.getElementById('guideModal').classList.remove('hidden');
-            document.getElementById('guideModal').classList.add('flex');
-        }
-        function closeGuideModal() {
-            document.getElementById('guideModal').classList.add('hidden');
-            document.getElementById('guideModal').classList.remove('flex');
         }
 
         function showToast(msg, iconName = 'info') {
