@@ -1,801 +1,749 @@
+
 <!DOCTYPE html>
-<html lang="fr" class="light">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="google-site-verification" content="M_hFsDl8be9YEqiAi3qhuugW9aIeUFdovb-Sir6ZClE" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RESERVOIR-CLAN FRANCAIS-CLASH ROYALE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        crgold: '#f59e0b',
-                        crblue: '#0284c7',
-                        crred: '#e11d48',
-                        crdark: '#0f172a',
-                        crlightBg: '#f8fafc',
-                        crcardLight: '#ffffff',
-                        crnavy: '#1e293b',
-                        crlavender: '#38bdf8'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        display: ['Inter', 'system-ui', 'sans-serif']
-                    }
-                }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Réservoir clan de France Clash Royale</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Supabase SDK Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            royale: {
+              gold: '#FFC700',
+              goldDark: '#D4A000',
+              blue: '#1E63B3',
+              darkBlue: '#0E2E5B',
+              bgLight: '#F3F6FA'
             }
+          },
+          fontFamily: {
+            clash: ['"Fredoka One"', 'cursive', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          }
         }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Identity Services Library -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <style>
-        body {
-            background-color: #f1f5f9;
-            color: #0f172a;
-            font-family: 'Inter', sans-serif;
-            background-image: 
-                radial-gradient(circle at 15% 15%, rgba(2, 132, 199, 0.08) 0%, transparent 45%),
-                radial-gradient(circle at 85% 85%, rgba(245, 158, 11, 0.08) 0%, transparent 45%);
-        }
-        .cr-border { border: 2px solid #e2e8f0; }
-        .cr-glow { box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.15); }
-        .cr-gold-glow { box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); }
-        .card-hover { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            border-color: #0284c7;
-            box-shadow: 0 20px 30px -10px rgba(2, 132, 199, 0.15);
-        }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #F3F6FA;
+      color: #1E293B;
+    }
+    .font-clash {
+      font-family: 'Fredoka One', cursive;
+    }
+    .card-shadow {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+    .royale-card {
+      transition: all 0.25s ease-in-out;
+    }
+    .royale-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 30px -10px rgba(30, 99, 179, 0.15);
+    }
+    .btn-gold {
+      background: linear-gradient(180deg, #FFDF00 0%, #FFC700 100%);
+      border-bottom: 4px solid #C49800;
+      text-shadow: 0px 1px 2px rgba(0,0,0,0.2);
+    }
+    .btn-gold:hover {
+      background: linear-gradient(180deg, #FFC700 0%, #E6B200 100%);
+    }
+    .btn-blue {
+      background: linear-gradient(180deg, #2B72CB 0%, #1E63B3 100%);
+      border-bottom: 4px solid #144680;
+    }
+    .btn-blue:hover {
+      background: linear-gradient(180deg, #1E63B3 0%, #164D8C 100%);
+    }
+    .btn-green {
+      background: linear-gradient(180deg, #34D399 0%, #059669 100%);
+      border-bottom: 4px solid #047857;
+    }
+    .btn-green:hover {
+      background: linear-gradient(180deg, #10B981 0%, #047857 100%);
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-crblue selection:text-white">
+<body class="min-h-screen flex flex-col antialiased">
 
-    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-auto py-3 sm:py-0 sm:h-20 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="flex items-center space-x-3.5 w-full sm:w-auto justify-between sm:justify-start">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-sky-500 flex items-center justify-center cr-gold-glow font-black text-xl sm:text-2xl italic text-white shrink-0">
-                        👑
-                    </div>
-                    <div>
-                        <h1 class="font-black text-lg sm:text-xl tracking-tight flex items-center gap-1.5 text-slate-900">
-                            RESERVOIR-CLAN <span class="text-amber-600">FRANCE</span>
-                        </h1>
-                        <p class="text-[10px] sm:text-xs font-medium text-slate-500 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            Sauvegarde auto & Sync Drive
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex items-center justify-end w-full sm:w-auto gap-2 overflow-x-auto pb-1 sm:pb-0">
-                <button onclick="openSettingsModal()" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold transition border border-slate-200 text-slate-700 shrink-0">
-                    <i data-lucide="key" class="w-4 h-4 text-amber-600"></i>
-                    <span class="hidden md:inline">Paramètres & Client ID</span>
-                </button>
-
-                <button id="adminToggleBtn" onclick="toggleAdminMode()" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold transition border border-slate-200 text-slate-700 shrink-0">
-                    <i data-lucide="shield" class="w-4 h-4 text-slate-600" id="adminIcon"></i>
-                    <span id="adminToggleText">Admin : OFF</span>
-                </button>
-
-                <!-- Dropdown Import / Export / Google Drive -->
-                <div class="relative group shrink-0">
-                    <button class="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold transition border border-slate-200 text-slate-700">
-                        <i data-lucide="database" class="w-4 h-4 text-emerald-600"></i>
-                        <span>Sauvegarde / Sync</span>
-                    </button>
-                    <div class="absolute right-0 mt-2 w-60 bg-white border border-slate-200 rounded-2xl shadow-xl p-1.5 hidden group-hover:block z-50">
-                        <div class="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase border-b border-slate-100 mb-1">
-                            Fichiers locaux
-                        </div>
-                        <button onclick="exportClansJSON()" class="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-xl hover:bg-slate-100 text-xs text-slate-700 font-medium transition">
-                            <i data-lucide="download" class="w-4 h-4 text-amber-600"></i>
-                            <span>Exporter en JSON</span>
-                        </button>
-                        <button onclick="triggerImportJSON()" class="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-xl hover:bg-slate-100 text-xs text-slate-700 font-medium transition">
-                            <i data-lucide="upload" class="w-4 h-4 text-crblue"></i>
-                            <span>Importer un fichier JSON</span>
-                        </button>
-
-                        <div class="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase border-b border-slate-100 my-1">
-                            Cloud Google Drive
-                        </div>
-                        <button onclick="syncWithGoogleDrive('save')" class="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-xl hover:bg-slate-100 text-xs text-slate-700 font-medium transition">
-                            <i data-lucide="cloud-upload" class="w-4 h-4 text-blue-500"></i>
-                            <span>Sauvegarder vers Drive</span>
-                        </button>
-                        <button onclick="syncWithGoogleDrive('load')" class="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-xl hover:bg-slate-100 text-xs text-slate-700 font-medium transition">
-                            <i data-lucide="cloud-download" class="w-4 h-4 text-emerald-500"></i>
-                            <span>Charger depuis Drive</span>
-                        </button>
-
-                        <input type="file" id="importFile" accept=".json" onchange="importClansJSON(event)" class="hidden">
-                    </div>
-                </div>
-
-                <button onclick="openClanModal(null)" class="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold transition cr-gold-glow shrink-0">
-                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                    <span>Ajouter Clan</span>
-                </button>
-            </div>
+  <!-- NAVBAR -->
+  <header class="bg-royale-darkBlue text-white sticky top-0 z-40 border-b-4 border-royale-gold shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-4">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 bg-royale-gold rounded-2xl flex items-center justify-center text-royale-darkBlue text-2xl font-clash shadow-inner transform -rotate-3 border-2 border-white">
+          👑
         </div>
-    </header>
-
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
-        <!-- Stats Overview Banner -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            <div class="bg-white cr-border rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex items-center space-x-3 sm:space-x-4 shadow-sm">
-                <div class="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-sky-50 text-crblue shrink-0">
-                    <i data-lucide="users" class="w-5 h-5 sm:w-7 sm:h-7"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider">Clans</p>
-                    <p id="statTotalClans" class="text-lg sm:text-2xl font-black text-slate-900">0</p>
-                </div>
-            </div>
-            <div class="bg-white cr-border rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex items-center space-x-3 sm:space-x-4 shadow-sm">
-                <div class="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-amber-50 text-amber-600 shrink-0">
-                    <i data-lucide="trophy" class="w-5 h-5 sm:w-7 sm:h-7"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider">Top Trophées</p>
-                    <p id="statTopTrophies" class="text-lg sm:text-2xl font-black text-amber-600">0</p>
-                </div>
-            </div>
-            <div class="bg-white cr-border rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex items-center space-x-3 sm:space-x-4 shadow-sm">
-                <div class="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-emerald-50 text-emerald-600 shrink-0">
-                    <i data-lucide="user-check" class="w-5 h-5 sm:w-7 sm:h-7"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider">Joueurs</p>
-                    <p id="statTotalPlayers" class="text-lg sm:text-2xl font-black text-slate-900">0</p>
-                </div>
-            </div>
-            <div class="bg-white cr-border rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex items-center space-x-3 sm:space-x-4 shadow-sm">
-                <div class="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-rose-50 text-rose-600 shrink-0">
-                    <i data-lucide="swords" class="w-5 h-5 sm:w-7 sm:h-7"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider">Guerres</p>
-                    <p id="statActiveWars" class="text-lg sm:text-2xl font-black text-slate-900">0</p>
-                </div>
-            </div>
+        <div>
+          <h1 class="text-xl sm:text-2xl font-clash tracking-wide text-royale-gold drop-shadow-md">
+            Réservoir clan de France Clash Royale
+          </h1>
+          <p class="text-xs text-blue-200 flex items-center gap-2 font-medium">
+            <span id="storage-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-slate-900">
+              ⚡ Local Storage
+            </span>
+            — Plateforme de Recrutement
+          </p>
         </div>
+      </div>
 
-        <!-- Filter & Search Toolbar -->
-        <div class="bg-white cr-border rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col md:flex-row gap-3 items-center justify-between shadow-sm">
-            <div class="relative w-full md:w-80">
-                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                <input type="text" id="searchInput" placeholder="Filtrer par nom ou #TAG..." oninput="renderClans()" class="w-full bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl pl-11 pr-4 py-2.5 sm:py-3 text-sm focus:outline-none focus:border-crblue text-slate-900 font-medium">
-            </div>
-            <div class="flex flex-col sm:flex-row items-center gap-2.5 w-full md:w-auto">
-                <select id="filterOrientation" onchange="renderClans()" class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl px-4 py-2.5 sm:py-3 text-sm text-slate-700 font-semibold focus:outline-none focus:border-crblue">
-                    <option value="ALL">✨ Toutes orientations</option>
-                    <option value="Guerre obligatoire">⚔️ Guerre obligatoire</option>
-                    <option value="Mixte">⚖️ Mixte</option>
-                    <option value="Chill & Détente">☕ Chill & Détente</option>
-                </select>
-                <select id="sortSelect" onchange="renderClans()" class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl px-4 py-2.5 sm:py-3 text-sm text-slate-700 font-semibold focus:outline-none focus:border-crblue">
-                    <option value="trophies">🏆 Trier par Trophées</option>
-                    <option value="players">👥 Trier par Joueurs</option>
-                    <option value="name">🔤 Trier par Nom (A-Z)</option>
-                </select>
-            </div>
+      <!-- ACTIONS HEADER -->
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <button onclick="toggleModal('register-clan-modal')" class="btn-green px-3 sm:px-4 py-2 rounded-xl font-bold text-white text-sm flex items-center gap-2 shadow-md">
+          <i class="fa-solid fa-plus-circle"></i>
+          <span>Inscrire mon Clan</span>
+        </button>
+
+        <button onclick="toggleModal('join-guide-modal')" class="btn-gold px-3 sm:px-4 py-2 rounded-xl font-bold text-slate-900 text-sm flex items-center gap-2">
+          <i class="fa-solid fa-circle-question"></i>
+          <span>Aide</span>
+        </button>
+
+        <button onclick="openAdminAuth()" class="btn-blue px-3 sm:px-4 py-2 rounded-xl font-bold text-white text-sm flex items-center gap-2">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>Admin Créateur</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- CONTENU PRINCIPAL -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- BARRE DE RECHERCHE ET TRI -->
+    <div class="bg-white p-4 sm:p-6 rounded-2xl card-shadow border border-slate-100 mb-8 flex flex-col md:flex-row gap-4 justify-between items-center">
+      
+      <div class="relative w-full md:w-1/2">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <i class="fa-solid fa-magnifying-glass"></i>
         </div>
+        <input 
+          type="text" 
+          id="search-input"
+          oninput="renderClans()"
+          placeholder="Rechercher par nom de clan ou #TAG..." 
+          class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royale-blue focus:outline-none font-medium text-slate-700"
+        />
+      </div>
 
-        <!-- Clans Grid Leaderboard -->
-        <div id="clansContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <!-- Rendered via JavaScript -->
-        </div>
+      <div class="flex items-center gap-3 w-full md:w-auto">
+        <label for="sort-select" class="text-sm font-bold text-slate-600 whitespace-nowrap flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-down-short-wide text-royale-blue"></i> Trier par :
+        </label>
+        <select 
+          id="sort-select" 
+          onchange="renderClans()"
+          class="w-full md:w-auto bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-royale-blue focus:outline-none cursor-pointer"
+        >
+          <option value="alpha-asc">🔤 Ordre Alphabétique (A - Z)</option>
+          <option value="alpha-desc">🔤 Ordre Alphabétique (Z - A)</option>
+          <option value="trophies-desc">🏆 Trophées du Clan</option>
+          <option value="warTrophies-desc">⚔️ Trophées de Guerre</option>
+          <option value="members-desc">👥 Nombre de membres réels</option>
+          <option value="league-desc">🛡️ Niveau de Ligue de Guerre</option>
+        </select>
+      </div>
 
-    </main>
-
-    <footer class="mt-auto border-t border-slate-200 bg-white py-6 text-center text-xs font-medium text-slate-500 px-4">
-        <p>Clash Royale France Dashboard — Enregistrement local & Synchronisation Cloud Google Drive.</p>
-    </footer>
-
-    <!-- MODAL AJOUT / EDITION CLAN -->
-    <div id="clanModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
-        <div class="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl w-full max-w-lg p-5 sm:p-7 space-y-4 sm:space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 id="modalTitle" class="text-lg sm:text-xl font-black text-slate-900">Ajouter / Modifier un Clan</h3>
-                <button onclick="closeClanModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <form id="clanForm" onsubmit="handleClanFormSubmit(event)" class="space-y-3 sm:space-y-4">
-                <input type="hidden" id="editClanId">
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase">Tag du Clan (#TAG)</label>
-                        <input type="text" id="inputTag" required placeholder="#2PPQR8" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm uppercase focus:outline-none focus:border-crblue text-slate-900 font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase">Nom du Clan</label>
-                        <input type="text" id="inputName" required placeholder="France Royale FR" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-crblue text-slate-900 font-semibold">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-2 sm:gap-3">
-                    <div>
-                        <label class="block text-[10px] sm:text-[11px] font-bold text-slate-600 mb-1 uppercase">Trophées</label>
-                        <input type="number" id="inputTrophies" value="50000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-crblue text-slate-900 font-semibold">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] sm:text-[11px] font-bold text-slate-600 mb-1 uppercase">Joueurs (/50)</label>
-                        <input type="number" id="inputPlayers" min="1" max="50" value="50" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-crblue text-slate-900 font-semibold">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] sm:text-[11px] font-bold text-slate-600 mb-1 uppercase">Guerre</label>
-                        <input type="number" id="inputWarTrophies" value="3500" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-crblue text-slate-900 font-semibold">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase">Orientation</label>
-                    <select id="inputOrientation" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-crblue text-slate-900 font-semibold">
-                        <option value="Guerre obligatoire">⚔️ Guerre obligatoire</option>
-                        <option value="Mixte">⚖️ Mixte</option>
-                        <option value="Chill & Détente">☕ Chill & Détente</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase">Chef de Clan</label>
-                        <input type="text" id="inputLeader" placeholder="Pseudo du Chef" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-crblue text-slate-900 font-semibold">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase">Adjoints (virgules)</label>
-                        <input type="text" id="inputCoLeaders" placeholder="Kratos, Mael, Vex" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-crblue text-slate-900 font-semibold">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase">Lien Discord</label>
-                        <input type="text" id="inputDiscord" placeholder="discord.gg/votre-clan" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-crblue text-slate-900 font-semibold">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase">Blason / Icône</label>
-                        <input type="file" id="inputBadgeFile" accept="image/*" onchange="handleBadgeUpload(event)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-1.5 text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-sky-100 file:text-crblue">
-                    </div>
-                </div>
-
-                <div id="badgePreviewContainer" class="flex items-center space-x-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200 hidden">
-                    <img id="badgePreviewImg" src="" alt="Aperçu blason" class="w-10 h-10 rounded-lg object-cover border border-slate-200">
-                    <span class="text-xs font-bold text-slate-700">Blason prêt</span>
-                </div>
-
-                <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
-                    <button type="button" onclick="closeClanModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 transition">Annuler</button>
-                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold shadow-md transition">Enregistrer</button>
-                </div>
-            </form>
-        </div>
     </div>
 
-    <!-- MODAL PARAMETRES & GOOGLE DRIVE API -->
-    <div id="settingsModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white border border-slate-200 rounded-3xl w-full max-w-lg p-6 space-y-5 shadow-2xl">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
-                    <i data-lucide="key" class="w-5 h-5 text-amber-600"></i> API & Client ID Google Drive
-                </h3>
-                <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div class="space-y-4 text-sm text-slate-600">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Client ID Google Drive API (OAuth 2.0)</label>
-                    <input type="text" id="inputDriveClientId" placeholder="xxxxxxxx.apps.googleusercontent.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-mono text-slate-900">
-                    <p class="text-[10px] text-slate-400 mt-1">Nécessaire pour autoriser la synchronisation directement sur votre Google Drive.</p>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Clé API Officielle Clash Royale</label>
-                    <input type="password" id="inputApiKey" placeholder="Entrez votre clé API Royale..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-mono text-slate-900">
-                </div>
-            </div>
-            <div class="flex justify-end pt-3 border-t border-slate-100">
-                <button onclick="saveSettings()" class="px-5 py-2.5 rounded-xl bg-crblue text-white text-xs font-bold">Enregistrer</button>
-            </div>
+    <!-- STATISTIQUES GLOBALES -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white p-4 rounded-2xl border border-slate-100 card-shadow flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg">🏰</div>
+        <div>
+          <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Clans Inscrits</div>
+          <div id="stat-total-clans" class="text-xl font-clash text-slate-800">0</div>
         </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-100 card-shadow flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg">👥</div>
+        <div>
+          <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Membres Réels</div>
+          <div id="stat-total-members" class="text-xl font-clash text-slate-800">0</div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-100 card-shadow flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center font-bold text-lg">🏆</div>
+        <div>
+          <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Trophées Cumulés</div>
+          <div id="stat-total-trophies" class="text-xl font-clash text-slate-800">0</div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-100 card-shadow flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-lg">⚡</div>
+        <div>
+          <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Synchro API</div>
+          <div class="text-xs font-bold text-green-600 flex items-center gap-1 mt-1">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-ping"></span> Prête
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
-    <div id="toastMessage" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white border border-slate-800 px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none text-xs font-bold">
-        <i id="toastIcon" data-lucide="info" class="w-4 h-4 text-sky-400"></i>
-        <span id="toastText">Notification</span>
+    <!-- LISTE DES CLANS -->
+    <div id="clans-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    <div id="empty-state" class="hidden text-center py-12 bg-white rounded-2xl border border-slate-100 card-shadow">
+      <div class="text-5xl mb-3">🛡️</div>
+      <h3 class="text-lg font-clash text-slate-700">Aucun clan trouvé</h3>
     </div>
 
-    <script>
-        const DEFAULT_CLANS = [
-            {
-                id: 'clan-1',
-                tag: '#2PPQR8',
-                name: 'France Royale FR',
-                trophies: 56450,
-                players: 50,
-                warTrophies: 4250,
-                orientation: 'Guerre obligatoire',
-                badgeUrl: 'https://placehold.co/120x120/0284c7/ffffff?text=FR',
-                discord: 'discord.gg/frroyale',
-                leader: 'AlexFR',
-                coLeaders: ['Kratos', 'Mael', 'Vex']
-            },
-            {
-                id: 'clan-2',
-                tag: '#9V2Y8P',
-                name: 'Paris Knights',
-                trophies: 53100,
-                players: 47,
-                warTrophies: 3900,
-                orientation: 'Mixte',
-                badgeUrl: 'https://placehold.co/120x120/f59e0b/ffffff?text=PK',
-                discord: 'discord.gg/parisknights',
-                leader: 'Lancelot',
-                coLeaders: ['Arthur', 'Gawain']
-            }
-        ];
+  </main>
 
-        let clansData = [];
-        let isAdminMode = false;
-        let selectedBadgeBase64 = null;
-        let royaleApiKey = '';
-        let googleClientId = '';
-        let tokenClient = null;
-        let driveAccessToken = null;
-        let pendingDriveAction = null;
+  <!-- MODAL : INSCRIPTION OUVERTE À TOUS (CHEFS & ADJOINTS) -->
+  <div id="register-clan-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 card-shadow border border-slate-100 relative max-h-[90vh] overflow-y-auto">
+      
+      <button onclick="toggleModal('register-clan-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-xl">&times;</button>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadClansFromStorage();
-            loadSettings();
-            renderClans();
-            lucide.createIcons();
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl font-clash">🏰</div>
+        <div>
+          <h2 class="text-xl font-clash text-slate-800">Inscrire votre Clan</h2>
+          <p class="text-xs text-slate-500">Espace réservé aux Chefs et Adjoints de clans français</p>
+        </div>
+      </div>
 
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'cr_france_clans_v5') {
-                    loadClansFromStorage();
-                    renderClans();
-                    showToast('Données synchronisées automatiquement.', 'refresh-cw');
-                }
-            });
-        });
+      <form onsubmit="handlePublicAddClan(event)" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Votre Rôle *</label>
+            <select id="pub-user-role" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-700">
+              <option value="Chef">👑 Je suis Chef de ce clan</option>
+              <option value="Adjoint">⚔️ Je suis Adjoint de ce clan</option>
+            </select>
+          </div>
 
-        function loadClansFromStorage() {
-            try {
-                const saved = localStorage.getItem('cr_france_clans_v5');
-                if (saved) {
-                    clansData = JSON.parse(saved);
-                } else {
-                    clansData = DEFAULT_CLANS;
-                    saveClansToStorage();
-                }
-            } catch (err) {
-                clansData = DEFAULT_CLANS;
-            }
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nom du Clan *</label>
+            <input type="text" id="pub-clan-name" required placeholder="Ex: Team French" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ID du Clan (#TAG) *</label>
+            <input type="text" id="pub-clan-tag" required placeholder="Ex: #FR3CLAN3" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nom du Chef *</label>
+            <input type="text" id="pub-clan-leader" required placeholder="Pseudonyme du Chef" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nom d'un Adjoint *</label>
+            <input type="text" id="pub-clan-co-leader" required placeholder="Pseudonyme d'un Adjoint" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Style de Jeu *</label>
+            <select id="pub-clan-type" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+              <option value="Guerre de clan">⚔️ Guerre de clan</option>
+              <option value="Chill">🌿 Chill</option>
+              <option value="Mixte" selected>⚖️ Mixte</option>
+            </select>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block font-bold text-slate-700 mb-1">Ligue de Guerre de Clan *</label>
+            <select id="pub-clan-league" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+              <option value="Ligue Légendaire III">🏆 Ligue Légendaire III</option>
+              <option value="Ligue Légendaire II">🏆 Ligue Légendaire II</option>
+              <option value="Ligue Légendaire I" selected>🏆 Ligue Légendaire I</option>
+              <option value="Ligue d'Or III">🥇 Ligue d'Or III</option>
+              <option value="Ligue d'Or II">🥇 Ligue d'Or II</option>
+              <option value="Ligue d'Or I">🥇 Ligue d'Or I</option>
+              <option value="Ligue d'Argent III">🥈 Ligue d'Argent III</option>
+              <option value="Ligue d'Argent II">🥈 Ligue d'Argent II</option>
+              <option value="Ligue d'Argent I">🥈 Ligue d'Argent I</option>
+              <option value="Ligue de Bronze III">🥉 Ligue de Bronze III</option>
+              <option value="Ligue de Bronze II">🥉 Ligue de Bronze II</option>
+              <option value="Ligue de Bronze I">🥉 Ligue de Bronze I</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Trophées du Clan (🏆)</label>
+            <input type="number" id="pub-clan-trophies" value="50000" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Trophées Guerre de Clan (⚔️) *</label>
+            <input type="number" id="pub-clan-war-trophies" value="3000" required placeholder="Ex: 3000" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg" />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block font-bold text-slate-700 mb-1">Membres Réels (ex: 45)</label>
+            <input type="number" id="pub-clan-members" min="1" max="50" value="45" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg" />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block font-bold text-slate-700 mb-1">Lien d'invitation Discord</label>
+            <input type="url" id="pub-clan-discord" placeholder="https://discord.gg/..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg" />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block font-bold text-slate-700 mb-1">Blason / Icône du Clan (Image PC)</label>
+            <input type="file" id="pub-clan-badge-file" accept="image/*" onchange="handlePublicBadgeUpload(event)" class="w-full text-xs text-slate-500" />
+            <input type="hidden" id="pub-clan-badge-base64" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-green w-full py-2.5 rounded-xl font-bold text-white text-sm mt-2">
+          🚀 Valider et Publier mon Clan
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- MODAL : COMMENT NOUS REJOINDRE -->
+  <div id="join-guide-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 card-shadow border border-slate-100 relative">
+      <button onclick="toggleModal('join-guide-modal')" class="absolute top-4 right-4 text-slate-400 font-bold text-xl">&times;</button>
+      <h2 class="text-2xl font-clash text-slate-800 text-center mb-4">Comment rejoindre un clan ?</h2>
+      <div class="space-y-3 text-xs text-slate-600">
+        <p>1. <strong>Via Discord :</strong> Cliquez sur le bouton violet <strong>Discord</strong> sur la carte du clan pour discuter avec le chef.</p>
+        <p>2. <strong>Directement en Jeu :</strong> Cliquez sur <strong>Copier ID</strong> pour récupérer le <code>#TAG</code>, puis collez-le dans l'onglet Social de Clash Royale.</p>
+      </div>
+      <button onclick="toggleModal('join-guide-modal')" class="btn-blue w-full py-2.5 rounded-xl font-bold text-white text-sm mt-4">J'ai compris !</button>
+    </div>
+  </div>
+
+  <!-- MODAL : ADMIN CRÉATEUR (RÉSERVÉ) -->
+  <div id="admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 card-shadow border border-slate-100 relative max-h-[90vh] overflow-y-auto">
+      
+      <button onclick="toggleModal('admin-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-xl">&times;</button>
+
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 text-royale-gold flex items-center justify-center text-xl font-clash">🔐</div>
+        <div>
+          <h2 class="text-xl font-clash text-slate-800">Panneau Créateur du Site</h2>
+          <p class="text-xs text-slate-500">Configuration Supabase Cloud, API Royale & Drive</p>
+        </div>
+      </div>
+
+      <!-- CONFIGURATION DE STOCKAGE CLOUD & DRIVE -->
+      <div class="mb-6 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-3">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-key text-royale-blue"></i> Config Supabase & API Clash Royale
+        </h3>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Clé API Officielle Clash Royale (Bearer Token) :</label>
+          <input type="text" id="admin-royale-key" placeholder="eyJhbGciOiJKV1QiLCJhbG..." class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg font-mono text-[10px]" />
+          <p class="text-[10px] text-slate-400 mt-1">Optionnel. L'application utilise par défaut le proxy public RoyaleAPI.</p>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">URL Supabase Cloud :</label>
+          <input type="text" id="admin-sp-url" placeholder="https://xxxx.supabase.co" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg" />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Clé Publique Anon Supabase :</label>
+          <input type="text" id="admin-sp-key" placeholder="eyJhbGciOi..." class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg font-mono text-[10px]" />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Lien Google Drive :</label>
+          <div class="flex gap-2">
+            <input type="url" id="admin-drive-url" placeholder="https://drive.google.com/..." class="flex-grow px-3 py-2 bg-white border border-slate-300 rounded-lg" />
+            <a id="drive-link-btn" href="#" target="_blank" class="bg-green-600 text-white font-bold px-3 py-2 rounded-lg shrink-0 flex items-center gap-1">
+              <i class="fa-brands fa-google-drive"></i> Drive
+            </a>
+          </div>
+        </div>
+
+        <button onclick="saveAdminSettings()" class="bg-slate-800 text-white font-bold px-4 py-2 rounded-lg">💾 Enregistrer Configuration</button>
+      </div>
+
+      <!-- EXPORTATION ET SAUVEGARDE -->
+      <div class="border-t border-slate-100 pt-4 text-xs space-y-3">
+        <h3 class="text-sm font-bold text-slate-800">Sauvegardes Externes (Export / Import)</h3>
+        <div class="flex gap-2">
+          <button onclick="exportDataJSON()" class="flex-1 p-2.5 bg-slate-100 hover:bg-slate-200 font-bold rounded-xl border">Exporter JSON</button>
+          <button onclick="exportDataCSV()" class="flex-1 p-2.5 bg-slate-100 hover:bg-slate-200 font-bold rounded-xl border">Exporter CSV</button>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">Importer un fichier de sauvegarde (JSON / CSV) :</label>
+          <input type="file" id="import-file-input" accept=".json, .csv" onchange="importDataFile(event)" class="w-full text-xs" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP -->
+  <script>
+    // LISTE PAR DÉFAUT : UNIPUEMENT FRENCH 3, FRENCH 4, FRENCH 5
+    const DEFAULT_CLANS = [
+      { id: "3", name: "French 3", tag: "#FR3CLAN3", leader: "Pierre", coLeader: "Luc", type: "Guerre de clan", league: "Ligue Légendaire I", trophies: 72000, warTrophies: 3200, members: 47, badgeUrl: "", discord: "https://discord.gg/teamfrench" },
+      { id: "4", name: "French 4", tag: "#FR4CLAN4", leader: "Antoine", coLeader: "Max", type: "Mixte", league: "Ligue d'Or III", trophies: 55000, warTrophies: 2100, members: 45, badgeUrl: "", discord: "https://discord.gg/teamfrench" },
+      { id: "5", name: "French 5", tag: "#FR5CLAN5", leader: "Valentin", coLeader: "Hugo", type: "Chill", league: "Ligue d'Argent II", trophies: 41000, warTrophies: 1200, members: 40, badgeUrl: "", discord: "https://discord.gg/teamfrench" }
+    ];
+
+    let clansData = [];
+    let supabaseClient = null;
+    let ADMIN_PASSWORD = localStorage.getItem("admin_pass") || "admin123";
+
+    window.onload = function() {
+      loadAdminSettings();
+      initSupabaseAndLoadData();
+    };
+
+    function openAdminAuth() {
+      const pass = prompt("🔐 Mot de passe Administration Créateur :");
+      if (pass === ADMIN_PASSWORD) {
+        toggleModal('admin-modal');
+      } else if (pass !== null) {
+        alert("❌ Mot de passe incorrect.");
+      }
+    }
+
+    function loadAdminSettings() {
+      const spUrl = localStorage.getItem("sp_url") || "";
+      const spKey = localStorage.getItem("sp_key") || "";
+      const royaleKey = localStorage.getItem("royale_key") || "";
+      const driveUrl = localStorage.getItem("drive_url") || "https://drive.google.com/drive/folders/1xXmzfbfMqazT-DyQSLt96qRNnA5-EFv6";
+
+      document.getElementById("admin-sp-url").value = spUrl;
+      document.getElementById("admin-sp-key").value = spKey;
+      document.getElementById("admin-royale-key").value = royaleKey;
+      document.getElementById("admin-drive-url").value = driveUrl;
+      document.getElementById("drive-link-btn").href = driveUrl;
+    }
+
+    function saveAdminSettings() {
+      const url = document.getElementById("admin-sp-url").value.trim();
+      const key = document.getElementById("admin-sp-key").value.trim();
+      const royaleKey = document.getElementById("admin-royale-key").value.trim();
+      const driveUrl = document.getElementById("admin-drive-url").value.trim();
+
+      localStorage.setItem("sp_url", url);
+      localStorage.setItem("sp_key", key);
+      localStorage.setItem("royale_key", royaleKey);
+      localStorage.setItem("drive_url", driveUrl);
+
+      initSupabaseAndLoadData();
+      alert("✅ Configuration enregistrée !");
+    }
+
+    async function initSupabaseAndLoadData() {
+      const spUrl = localStorage.getItem("sp_url");
+      const spKey = localStorage.getItem("sp_key");
+      const badge = document.getElementById("storage-status-badge");
+
+      if (spUrl && spKey && window.supabase) {
+        supabaseClient = supabase.createClient(spUrl, spKey);
+        try {
+          const { data, error } = await supabaseClient.from('clans').select('*');
+          if (error) throw error;
+
+          if (data && data.length > 0) {
+            clansData = data.map(c => ({
+              id: c.id,
+              name: c.name,
+              tag: c.tag,
+              leader: c.leader,
+              coLeader: c.co_leader,
+              type: c.type || "Mixte",
+              league: c.league || "Ligue d'Or I",
+              trophies: c.trophies || 0,
+              warTrophies: c.war_trophies || 0,
+              members: c.members || 1,
+              badgeUrl: c.badge_url || "",
+              discord: c.discord || ""
+            }));
+          } else {
+            clansData = DEFAULT_CLANS;
+          }
+          badge.innerText = "☁️ Supabase Cloud";
+          badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-500 text-white";
+        } catch(err) {
+          loadLocalStorageFallback(badge);
+        }
+      } else {
+        loadLocalStorageFallback(badge);
+      }
+      renderClans();
+    }
+
+    function loadLocalStorageFallback(badge) {
+      badge.innerText = "⚡ Local Storage";
+      badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-slate-900";
+      const local = localStorage.getItem("clash_clans_db");
+      clansData = local ? JSON.parse(local) : DEFAULT_CLANS;
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem("clash_clans_db", JSON.stringify(clansData));
+    }
+
+    function handlePublicBadgeUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) { document.getElementById('pub-clan-badge-base64').value = e.target.result; };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function handlePublicAddClan(event) {
+      event.preventDefault();
+      const tagInput = document.getElementById('pub-clan-tag').value.trim();
+      const cleanTag = tagInput.startsWith('#') ? tagInput : '#' + tagInput;
+
+      const newClan = {
+        id: Date.now().toString(),
+        name: document.getElementById('pub-clan-name').value.trim(),
+        tag: cleanTag,
+        leader: document.getElementById('pub-clan-leader').value.trim(),
+        coLeader: document.getElementById('pub-clan-co-leader').value.trim(),
+        type: document.getElementById('pub-clan-type').value,
+        league: document.getElementById('pub-clan-league').value,
+        trophies: parseInt(document.getElementById('pub-clan-trophies').value) || 0,
+        warTrophies: parseInt(document.getElementById('pub-clan-war-trophies').value) || 0,
+        members: parseInt(document.getElementById('pub-clan-members').value) || 1,
+        badgeUrl: document.getElementById('pub-clan-badge-base64').value || '',
+        discord: document.getElementById('pub-clan-discord').value.trim()
+      };
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('clans').insert([{
+            id: newClan.id, name: newClan.name, tag: newClan.tag, leader: newClan.leader, 
+            co_leader: newClan.coLeader, type: newClan.type, league: newClan.league, 
+            trophies: newClan.trophies, war_trophies: newClan.warTrophies, members: newClan.members, 
+            badge_url: newClan.badgeUrl, discord: newClan.discord
+          }]);
+        } catch(e) { console.error("Supabase insert error", e); }
+      }
+
+      clansData.push(newClan);
+      saveToLocalStorage();
+      renderClans();
+
+      toggleModal('register-clan-modal');
+      alert(`🎉 Félicitations ! Votre clan "${newClan.name}" est maintenant inscrit !`);
+    }
+
+    async function syncClanAPI(clanId) {
+      const clan = clansData.find(c => c.id === clanId);
+      if (!clan) return;
+
+      const tagFormatted = clan.tag.replace('#', '%23');
+      const royaleKey = localStorage.getItem("royale_key");
+
+      alert(`🔄 Lancement de la synchronisation API pour ${clan.name}...`);
+
+      try {
+        let response, data;
+        
+        // Option A: Clé API privée si configurée
+        if (royaleKey) {
+          response = await fetch(`https://api.clashroyale.com/v1/clans/${tagFormatted}`, {
+            headers: { 'Authorization': `Bearer ${royaleKey}` }
+          });
+          if (!response.ok) throw new Error(`Erreur API Clash Royale (Status ${response.status})`);
+          data = await response.json();
+        } else {
+          // Option B: Proxy CORS public RoyaleAPI
+          response = await fetch(`https://proxy.royaleapi.dev/v1/clans/${tagFormatted}`);
+          if (!response.ok) {
+            // Fallback sur proxy CORS alternatif
+            response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.clashroyale.com/v1/clans/' + clan.tag)}`);
+            const originData = await response.json();
+            data = JSON.parse(originData.contents);
+          } else {
+            data = await response.json();
+          }
         }
 
-        function saveClansToStorage() {
-            try {
-                localStorage.setItem('cr_france_clans_v5', JSON.stringify(clansData));
-            } catch (err) {
-                console.error('Erreur sauvegarde', err);
-            }
+        if (data && (data.clanScore !== undefined || data.clanWarTrophies !== undefined)) {
+          clan.trophies = data.clanScore ?? clan.trophies;
+          clan.warTrophies = data.clanWarTrophies ?? clan.warTrophies;
+          clan.members = data.members ?? clan.members;
+
+          if (supabaseClient) {
+            await supabaseClient.from('clans').update({
+              trophies: clan.trophies,
+              war_trophies: clan.warTrophies,
+              members: clan.members
+            }).eq('id', clan.id);
+          }
+
+          saveToLocalStorage();
+          renderClans();
+          alert(`✅ Synchronisation réussie pour ${clan.name} !\n🏆 Trophées : ${clan.trophies}\n⚔️ Guerre : ${clan.warTrophies}\n👥 Membres : ${clan.members}/50`);
+        } else {
+          throw new Error("Format de réponse API non reconnu");
         }
+      } catch (err) {
+        console.warn("Erreur synchro API direct/proxy :", err);
+        alert(`ℹ️ Impossible de joindre l'API Clash Royale en direct pour le TAG ${clan.tag}.\n\nSi le tag est valide, ajoutez votre propre clé API Supercell dans "Admin Créateur" pour lever les restrictions CORS.`);
+      }
+    }
 
-        function loadSettings() {
-            try {
-                royaleApiKey = localStorage.getItem('cr_royale_api_key') || '';
-                googleClientId = localStorage.getItem('cr_google_client_id') || '';
-                document.getElementById('inputApiKey').value = royaleApiKey;
-                document.getElementById('inputDriveClientId').value = googleClientId;
-            } catch (err) {}
-        }
+    async function deleteClan(id) {
+      if (!confirm("Supprimer ce clan ?")) return;
+      if (supabaseClient) {
+        await supabaseClient.from('clans').delete().eq('id', id);
+      }
+      clansData = clansData.filter(c => c.id !== id);
+      saveToLocalStorage();
+      renderClans();
+    }
 
-        function saveSettings() {
-            royaleApiKey = document.getElementById('inputApiKey').value.trim();
-            googleClientId = document.getElementById('inputDriveClientId').value.trim();
-            localStorage.setItem('cr_royale_api_key', royaleApiKey);
-            localStorage.setItem('cr_google_client_id', googleClientId);
-            closeSettingsModal();
-            showToast('Paramètres enregistrés !', 'check-circle');
-        }
+    function renderClans() {
+      const container = document.getElementById('clans-container');
+      const searchVal = document.getElementById('search-input').value.toLowerCase().trim();
+      const sortVal = document.getElementById('sort-select').value;
 
-        function toggleAdminMode() {
-            isAdminMode = !isAdminMode;
-            const btn = document.getElementById('adminToggleBtn');
-            const icon = document.getElementById('adminIcon');
-            const text = document.getElementById('adminToggleText');
+      let filtered = clansData.filter(c => c.name.toLowerCase().includes(searchVal) || c.tag.toLowerCase().includes(searchVal));
 
-            if (isAdminMode) {
-                btn.className = 'flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-amber-500/10 text-xs font-bold transition border border-amber-300 text-amber-700 shrink-0';
-                text.textContent = 'Admin : ON';
-                icon.setAttribute('data-lucide', 'shield-check');
-                showToast('Mode Admin activé', 'shield-check');
-            } else {
-                btn.className = 'flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 text-xs font-semibold transition border border-slate-200 text-slate-700 shrink-0';
-                text.textContent = 'Admin : OFF';
-                icon.setAttribute('data-lucide', 'shield');
-                showToast('Mode Admin désactivé', 'shield');
-            }
-            renderClans();
-            lucide.createIcons();
-        }
+      filtered.sort((a, b) => {
+        if (sortVal === 'alpha-asc') return a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' });
+        if (sortVal === 'alpha-desc') return b.name.localeCompare(a.name, 'fr', { sensitivity: 'base' });
+        if (sortVal === 'trophies-desc') return b.trophies - a.trophies;
+        if (sortVal === 'warTrophies-desc') return (b.warTrophies || 0) - (a.warTrophies || 0);
+        if (sortVal === 'members-desc') return b.members - a.members;
+        return 0;
+      });
 
-        function renderClans() {
-            const container = document.getElementById('clansContainer');
-            const searchVal = (document.getElementById('searchInput').value || '').toLowerCase();
-            const filterOri = document.getElementById('filterOrientation').value;
-            const sortBy = document.getElementById('sortSelect').value;
+      updateStats();
 
-            let filtered = clansData.filter(c => {
-                const matchesSearch = c.name.toLowerCase().includes(searchVal) || c.tag.toLowerCase().includes(searchVal);
-                const matchesOri = filterOri === 'ALL' || (c.orientation || 'Mixte') === filterOri;
-                return matchesSearch && matchesOri;
-            });
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        document.getElementById('empty-state').classList.remove('hidden');
+        return;
+      }
 
-            filtered.sort((a, b) => {
-                if (sortBy === 'trophies') return b.trophies - a.trophies;
-                if (sortBy === 'players') return b.players - a.players;
-                if (sortBy === 'name') return a.name.localeCompare(b.name);
-                return 0;
-            });
+      document.getElementById('empty-state').classList.add('hidden');
+      container.innerHTML = filtered.map(clan => `
+        <div class="bg-white rounded-2xl border border-slate-100 card-shadow royale-card overflow-hidden flex flex-col justify-between">
+          <div class="bg-gradient-to-r from-royale-darkBlue to-royale-blue p-4 text-white flex justify-between items-start gap-2">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-white/10 rounded-xl border border-white/20 flex items-center justify-center shrink-0 overflow-hidden">
+                ${clan.badgeUrl ? `<img src="${clan.badgeUrl}" class="w-full h-full object-cover" />` : `<span class="text-2xl">🛡️</span>`}
+              </div>
+              <div>
+                <h3 class="text-lg font-clash text-white tracking-wide">${escapeHTML(clan.name)}</h3>
+                <span class="bg-black/30 text-amber-300 font-mono text-xs px-2 py-0.5 rounded-md border border-white/10">${escapeHTML(clan.tag)}</span>
+              </div>
+            </div>
+            <button onclick="deleteClan('${clan.id}')" title="Supprimer" class="text-white/40 hover:text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button>
+          </div>
 
-            // Refresh stats counters
-            document.getElementById('statTotalClans').textContent = clansData.length;
-            const topTrophy = clansData.reduce((max, c) => Math.max(max, c.trophies || 0), 0);
-            document.getElementById('statTopTrophies').textContent = topTrophy.toLocaleString('fr-FR');
-            const totalPlayers = clansData.reduce((sum, c) => sum + (c.players || 0), 0);
-            document.getElementById('statTotalPlayers').textContent = totalPlayers;
-            document.getElementById('statActiveWars').textContent = clansData.length;
+          <div class="p-5 space-y-4 flex-grow">
+            <div class="flex items-center justify-between gap-2 border-b pb-2">
+              <span class="font-bold text-[10px] px-2 py-0.5 rounded-md ${clan.type === 'Guerre de clan' ? 'bg-red-100 text-red-600' : clan.type === 'Chill' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">${escapeHTML(clan.type || 'Mixte')}</span>
+              <span class="text-xs font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded-lg">🛡️ ${escapeHTML(clan.league || "Ligue d'Or I")}</span>
+            </div>
 
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full bg-white cr-border rounded-2xl p-8 text-center text-slate-500">
-                        Aucun clan ne correspond à votre recherche.
-                    </div>`;
-                return;
-            }
+            <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2.5 rounded-xl border">
+              <div><span class="text-slate-400 font-bold block">👑 Chef</span><span class="font-bold text-slate-800">${escapeHTML(clan.leader)}</span></div>
+              <div><span class="text-slate-400 font-bold block">⚔️ Adjoint</span><span class="font-bold text-slate-800">${escapeHTML(clan.coLeader)}</span></div>
+            </div>
 
-            container.innerHTML = filtered.map(c => `
-                <div class="bg-white cr-border rounded-2xl sm:rounded-3xl p-5 card-hover flex flex-col justify-between relative shadow-sm">
-                    <div>
-                        <div class="flex items-start justify-between gap-3 mb-4">
-                            <div class="flex items-center space-x-3">
-                                <img src="${c.badgeUrl || 'https://placehold.co/120x120/0284c7/ffffff?text=CR'}" class="w-12 h-12 rounded-2xl object-cover border border-slate-200">
-                                <div>
-                                    <h3 class="font-extrabold text-base text-slate-900 leading-tight">${c.name}</h3>
-                                    <span class="text-xs font-mono font-bold text-crblue">${c.tag}</span>
-                                </div>
-                            </div>
-                            ${isAdminMode ? `
-                                <div class="flex items-center space-x-1">
-                                    <button onclick="openClanModal('${c.id}')" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600">
-                                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                                    </button>
-                                    <button onclick="deleteClan('${c.id}')" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600">
-                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                    </button>
-                                </div>
-                            ` : ''}
-                        </div>
+            <div class="grid grid-cols-3 gap-1.5 text-center">
+              <div class="bg-amber-50 border border-amber-100 rounded-xl p-2">
+                <div class="text-[9px] font-bold text-amber-800">TROPHÉES</div>
+                <div class="font-clash text-xs text-amber-600">🏆 ${clan.trophies.toLocaleString()}</div>
+              </div>
+              <div class="bg-red-50 border border-red-100 rounded-xl p-2">
+                <div class="text-[9px] font-bold text-red-800">GUERRE</div>
+                <div class="font-clash text-xs text-red-600">⚔️ ${(clan.warTrophies || 0).toLocaleString()}</div>
+              </div>
+              <div class="bg-blue-50 border border-blue-100 rounded-xl p-2">
+                <div class="text-[9px] font-bold text-blue-800">MEMBRES</div>
+                <div class="font-clash text-xs text-blue-600">👥 ${clan.members}/50</div>
+              </div>
+            </div>
+          </div>
 
-                        <div class="grid grid-cols-2 gap-2 mb-4">
-                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase">Trophées</p>
-                                <p class="text-sm font-black text-amber-600">${c.trophies.toLocaleString('fr-FR')}</p>
-                            </div>
-                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase">Joueurs</p>
-                                <p class="text-sm font-black text-slate-800">${c.players}/50</p>
-                            </div>
-                        </div>
+          <div class="p-4 bg-slate-50 border-t flex flex-col gap-2">
+            <div class="grid grid-cols-3 gap-2">
+              ${clan.discord ? `<a href="${clan.discord}" target="_blank" class="bg-indigo-600 text-white font-bold py-2 rounded-xl text-[11px] text-center flex items-center justify-center gap-1"><i class="fa-brands fa-discord"></i> Discord</a>` : '<button disabled class="bg-slate-200 text-slate-400 font-bold py-2 rounded-xl text-[11px]">Pas de Discord</button>'}
+              <button onclick="copyTag('${clan.tag}')" class="bg-slate-800 text-white font-bold py-2 rounded-xl text-[11px]"><i class="fa-regular fa-copy"></i> Copier ID</button>
+              <button onclick="syncClanAPI('${clan.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-[11px]"><i class="fa-solid fa-arrows-rotate"></i> Synchro</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
 
-                        <div class="space-y-1.5 text-xs text-slate-600 mb-4">
-                            <p><strong>Chef:</strong> ${c.leader || 'Non défini'}</p>
-                            <p class="truncate"><strong>Adjoints:</strong> ${Array.isArray(c.coLeaders) ? c.coLeaders.join(', ') : (c.coLeaders || 'Aucun')}</p>
-                            <p><strong>Style:</strong> <span class="inline-block px-2 py-0.5 rounded-md bg-sky-50 text-crblue font-bold text-[11px]">${c.orientation}</span></p>
-                        </div>
-                    </div>
+    function updateStats() {
+      document.getElementById('stat-total-clans').innerText = clansData.length;
+      document.getElementById('stat-total-members').innerText = clansData.reduce((acc, c) => acc + (parseInt(c.members) || 0), 0);
+      document.getElementById('stat-total-trophies').innerText = clansData.reduce((acc, c) => acc + (parseInt(c.trophies) || 0), 0).toLocaleString();
+    }
 
-                    ${c.discord ? `
-                        <a href="https://${c.discord.replace(/^https?:\/\//, '')}" target="_blank" class="w-full py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-xs font-bold transition flex items-center justify-center space-x-2">
-                            <i data-lucide="message-square" class="w-4 h-4"></i>
-                            <span>Rejoindre Discord</span>
-                        </a>
-                    ` : ''}
-                </div>
-            `).join('');
+    function copyTag(tag) {
+      navigator.clipboard.writeText(tag);
+      alert(`📋 ID ${tag} copié !`);
+    }
 
-            lucide.createIcons();
-        }
+    function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
 
-        function openClanModal(clanId = null) {
-            const modal = document.getElementById('clanModal');
-            const title = document.getElementById('modalTitle');
-            selectedBadgeBase64 = null;
-            document.getElementById('badgePreviewContainer').classList.add('hidden');
+    function exportDataJSON() {
+      const blob = new Blob([JSON.stringify(clansData, null, 2)], { type: "application/json" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `clans_backup.json`;
+      link.click();
+    }
 
-            if (clanId) {
-                const clan = clansData.find(c => c.id === clanId);
-                if (!clan) return;
-                title.textContent = 'Modifier le Clan';
-                document.getElementById('editClanId').value = clan.id;
-                document.getElementById('inputTag').value = clan.tag;
-                document.getElementById('inputName').value = clan.name;
-                document.getElementById('inputTrophies').value = clan.trophies;
-                document.getElementById('inputPlayers').value = clan.players;
-                document.getElementById('inputWarTrophies').value = clan.warTrophies || 3500;
-                document.getElementById('inputOrientation').value = clan.orientation || 'Mixte';
-                document.getElementById('inputLeader').value = clan.leader || '';
-                document.getElementById('inputCoLeaders').value = Array.isArray(clan.coLeaders) ? clan.coLeaders.join(', ') : (clan.coLeaders || '');
-                document.getElementById('inputDiscord').value = clan.discord || '';
-                document.getElementById('inputBadgeUrl').value = clan.badgeUrl || '';
-            } else {
-                title.textContent = 'Ajouter un Clan';
-                document.getElementById('clanForm').reset();
-                document.getElementById('editClanId').value = '';
-            }
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
+    function exportDataCSV() {
+      const headers = ["ID", "Nom", "Tag", "Chef", "Adjoint", "Type", "Ligue", "Trophees", "TropheesGuerre", "Membres", "Discord"];
+      const rows = clansData.map(c => [c.id, `"${c.name}"`, `"${c.tag}"`, `"${c.leader}"`, `"${c.coLeader}"`, `"${c.type}"`, `"${c.league}"`, c.trophies, c.warTrophies || 0, c.members, `"${c.discord}"`]);
+      const csv = [headers.join(";"), ...rows.map(e => e.join(";"))].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `clans_backup.csv`;
+      link.click();
+    }
 
-        function closeClanModal() {
-            const modal = document.getElementById('clanModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
+    function importDataFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          if (file.name.endsWith('.json')) clansData = JSON.parse(e.target.result);
+          saveToLocalStorage();
+          renderClans();
+          alert("✅ Import réussi !");
+        } catch(err) { alert("❌ Erreur d'importation."); }
+      };
+      reader.readAsText(file);
+    }
 
-        function handleBadgeUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    selectedBadgeBase64 = evt.target.result;
-                    document.getElementById('badgePreviewImg').src = selectedBadgeBase64;
-                    document.getElementById('badgePreviewContainer').classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function handleClanFormSubmit(e) {
-            e.preventDefault();
-            const editId = document.getElementById('editClanId').value;
-            const tag = document.getElementById('inputTag').value.trim();
-            const name = document.getElementById('inputName').value.trim();
-            const trophies = parseInt(document.getElementById('inputTrophies').value) || 0;
-            const players = parseInt(document.getElementById('inputPlayers').value) || 1;
-            const warTrophies = parseInt(document.getElementById('inputWarTrophies').value) || 0;
-            const orientation = document.getElementById('inputOrientation').value;
-            const leader = document.getElementById('inputLeader').value.trim();
-            const coLeadersRaw = document.getElementById('inputCoLeaders').value;
-            const coLeaders = coLeadersRaw.split(',').map(s => s.trim()).filter(Boolean);
-            const discord = document.getElementById('inputDiscord').value.trim();
-            const badgeUrl = selectedBadgeBase64 || document.getElementById('inputBadgeUrl').value || 'https://placehold.co/120x120/0284c7/ffffff?text=CR';
-
-            if (editId) {
-                const index = clansData.findIndex(c => c.id === editId);
-                if (index !== -1) {
-                    clansData[index] = { ...clansData[index], tag, name, trophies, players, warTrophies, orientation, leader, coLeaders, discord, badgeUrl };
-                    showToast('Clan mis à jour !', 'check-circle');
-                }
-            } else {
-                const newClan = {
-                    id: 'clan-' + Date.now(),
-                    tag, name, trophies, players, warTrophies, orientation, leader, coLeaders, discord, badgeUrl
-                };
-                clansData.push(newClan);
-                showToast('Nouveau clan enregistré !', 'plus-circle');
-            }
-
-            saveClansToStorage();
-            renderClans();
-            closeClanModal();
-        }
-
-        function deleteClan(id) {
-            if (confirm('Voulez-vous vraiment supprimer ce clan ?')) {
-                clansData = clansData.filter(c => c.id !== id);
-                saveClansToStorage();
-                renderClans();
-                showToast('Clan supprimé', 'trash-2');
-            }
-        }
-
-        // EXPORT & IMPORT LOCAL (JSON)
-        function exportClansJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(clansData, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `cr_clans_backup_${Date.now()}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-            showToast('Export JSON téléchargé !', 'download');
-        }
-
-        function triggerImportJSON() {
-            document.getElementById('importFile').click();
-        }
-
-        function importClansJSON(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if (Array.isArray(imported)) {
-                        clansData = imported;
-                        saveClansToStorage();
-                        renderClans();
-                        showToast('Données importées avec succès !', 'upload');
-                    } else {
-                        alert('Format JSON non valide.');
-                    }
-                } catch (err) {
-                    alert('Fichier JSON illisible.');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        // SYNCHRONISATION GOOGLE DRIVE API
-        function syncWithGoogleDrive(action) {
-            if (!googleClientId) {
-                openSettingsModal();
-                showToast('Veuillez renseigner votre Client ID Google Drive.', 'key');
-                return;
-            }
-
-            pendingDriveAction = action;
-
-            if (!driveAccessToken) {
-                initGoogleTokenClient();
-                tokenClient.requestAccessToken();
-            } else {
-                executeDriveAction();
-            }
-        }
-
-        function initGoogleTokenClient() {
-            if (tokenClient) return;
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: googleClientId,
-                scope: 'https://www.googleapis.com/auth/drive.file',
-                callback: (response) => {
-                    if (response.error) {
-                        showToast('Erreur d\'authentification Google', 'alert-circle');
-                        return;
-                    }
-                    driveAccessToken = response.access_token;
-                    executeDriveAction();
-                },
-            });
-        }
-
-        async function executeDriveAction() {
-            if (pendingDriveAction === 'save') {
-                await saveToDrive();
-            } else if (pendingDriveAction === 'load') {
-                await loadFromDrive();
-            }
-            pendingDriveAction = null;
-        }
-
-        async function saveToDrive() {
-            showToast('Sauvegarde sur Drive en cours...', 'refresh-cw');
-            const fileName = 'cr_france_clans_backup.json';
-            const fileData = JSON.stringify(clansData, null, 2);
-
-            try {
-                // Recherche si le fichier existe déjà
-                const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${fileName}' and trashed=false`, {
-                    headers: { Authorization: `Bearer ${driveAccessToken}` }
-                });
-                const searchJson = await searchRes.json();
-                
-                let fileId = searchJson.files && searchJson.files.length > 0 ? searchJson.files[0].id : null;
-
-                if (fileId) {
-                    // Mettre à jour le fichier existant
-                    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
-                        method: 'PATCH',
-                        headers: {
-                            Authorization: `Bearer ${driveAccessToken}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: fileData
-                    });
-                } else {
-                    // Créer un nouveau fichier
-                    const metadata = { name: fileName, mimeType: 'application/json' };
-                    const form = new FormData();
-                    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                    form.append('file', new Blob([fileData], { type: 'application/json' }));
-
-                    await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-                        method: 'POST',
-                        headers: { Authorization: `Bearer ${driveAccessToken}` },
-                        body: form
-                    });
-                }
-                showToast('Sauvegardé sur Google Drive !', 'cloud-upload');
-            } catch (err) {
-                console.error(err);
-                showToast('Échec de la sauvegarde Drive', 'alert-circle');
-            }
-        }
-
-        async function loadFromDrive() {
-            showToast('Recherche de la sauvegarde sur Drive...', 'refresh-cw');
-            const fileName = 'cr_france_clans_backup.json';
-
-            try {
-                const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${fileName}' and trashed=false`, {
-                    headers: { Authorization: `Bearer ${driveAccessToken}` }
-                });
-                const searchJson = await searchRes.json();
-
-                if (!searchJson.files || searchJson.files.length === 0) {
-                    showToast('Aucune sauvegarde trouvée sur Drive.', 'alert-circle');
-                    return;
-                }
-
-                const fileId = searchJson.files[0].id;
-                const fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-                    headers: { Authorization: `Bearer ${driveAccessToken}` }
-                });
-                const downloadedData = await fileRes.json();
-
-                if (Array.isArray(downloadedData)) {
-                    clansData = downloadedData;
-                    saveClansToStorage();
-                    renderClans();
-                    showToast('Données restaurées depuis Google Drive !', 'cloud-download');
-                }
-            } catch (err) {
-                console.error(err);
-                showToast('Échec de la récupération depuis Drive', 'alert-circle');
-            }
-        }
-
-        function openSettingsModal() {
-            document.getElementById('settingsModal').classList.remove('hidden');
-            document.getElementById('settingsModal').classList.add('flex');
-        }
-        function closeSettingsModal() {
-            document.getElementById('settingsModal').classList.add('hidden');
-            document.getElementById('settingsModal').classList.remove('flex');
-        }
-
-        function showToast(msg, iconName = 'info') {
-            const toast = document.getElementById('toastMessage');
-            document.getElementById('toastText').textContent = msg;
-            document.getElementById('toastIcon').setAttribute('data-lucide', iconName);
-            lucide.createIcons();
-
-            toast.classList.remove('translate-y-24', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-24', 'opacity-0');
-            }, 3000);
-        }
-    </script>
+    function escapeHTML(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    }
+  </script>
 </body>
 </html>
